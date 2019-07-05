@@ -1,5 +1,8 @@
 # EtherDelta Python Client
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/amisolution/py-etherdelta/master)
+
+
 > Python client for interacting with the [EtherDelta](https://etherdelta.com/) API and Smart Contracts.
 
 # Install
