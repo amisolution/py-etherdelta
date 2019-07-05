@@ -46,7 +46,6 @@ class Client:
     def get_eth_balance(self, account):
         """
         Returns the ETH balance of an account
-
         :param account: account
         :type account: str
         :return: balance
@@ -59,7 +58,6 @@ class Client:
     def get_token_balance(self, account, token_addr):
         """
         Returns the token balance of an account
-
         :param account: account
         :type account: str
         :param token_addr: token address
@@ -76,7 +74,6 @@ class Client:
     def get_etherdelta_eth_balance(self, account):
         """
         Returns the ETH balance in EtherDelta of an account
-
         :param account: account
         :type account: str
         :return: balance
@@ -89,7 +86,6 @@ class Client:
     def get_etherdelta_token_balance(self, account, token_addr):
         """
         Returns the token balance in EtherDelta of an account
-
         :param account: account
         :type account: str
         :param token_addr: token address
@@ -106,7 +102,6 @@ class Client:
     def get_token_address(self, symbol):
         """
         Returns the token address given the token symbol
-
         :param symbol: token symbol
         :type account: str
         :return: token address
@@ -125,7 +120,6 @@ class Client:
     def get_orderbook(self, token_addr):
         """
         Returns the orderbook for a token given the symbol
-
         :param token_addr: token address
         :type token_addr: str
         :return: orderbook
@@ -148,7 +142,6 @@ class Client:
     def get_order(self, token_addr, order_id):
         """
         Returns the the order information for a token given the symbol and order ID
-
         :param token_addr: token address
         :type token_addr: str
         :param order_id: order ID
@@ -179,7 +172,6 @@ class Client:
     def get_sell_orderbook(self, token_addr):
         """
         Returns the sell (asks) orderbook
-
         :param token_addr: token address
         :type token_addr: str
         :return: sell orderbook list
@@ -202,7 +194,6 @@ class Client:
     def get_buy_orderbook(self, token_addr):
         """
         Returns the buy (bids) orderbook
-
         :param token_addr: token address
         :type token_addr: str
         :return: buy orderbook list
@@ -226,7 +217,6 @@ class Client:
     def get_amount_filled(self, token_addr, order_id):
         """
         Returns amount filled for an order given order ID
-
         :param token_addr: token address
         :type token_addr: str
         :param order_id: order ID
@@ -253,7 +243,6 @@ class Client:
     def get_available_volume(self, token_addr, order_id):
         """
         Returns available volume for an order give order ID
-
         :param token_addr: token address
         :type token_addr: str
         :param order_id: order ID
@@ -280,7 +269,6 @@ class Client:
     def get_ticker(self, symbol=''):
         """
         Returns ticker data for token
-
         :param symbol: token symbol
         :type symbol: str
         :return: ticker data
@@ -304,7 +292,6 @@ class Client:
     def get_tickers(self):
         """
         Returns ticker data for all tokens
-
         :return: ticker data
         :rtype: object
         """
@@ -314,7 +301,7 @@ class Client:
         def callback(msg):
             nonlocal result
             self.ws.close()
-            print(msg)
+            #print(msg)
             if msg != None:
                 if msg:
                     if msg['returnTicker']:
@@ -327,7 +314,6 @@ class Client:
     def get_block_number(self):
         """
         Returns the highest block number
-
         :return: block number
         :rtype: int
         """
@@ -336,7 +322,6 @@ class Client:
     def create_order(self, side, expires, price, amount, token_addr, randomseed, user_private_key):
         """
         Returns a signed order
-
         :param side: buy or sell type
         :type side: str
         :param expires: expiration time in unix time
@@ -356,7 +341,7 @@ class Client:
         """
         global addressEtherDelta, w3
         userAccount = w3.eth.account.privateKeyToAccount(user_private_key).address
-        print("\nCreating '" + side + "' order for %.18f tokens @ %.18f ETH/token" % (amount, price))
+        #print("\nCreating '" + side + "' order for %.18f tokens @ %.18f ETH/token" % (amount, price))
         # Validate the input
         if len(user_private_key) != 64: raise ValueError('WARNING: user_private_key must be a hexadecimal string of 64 characters long')
         # Ensure good parameters
@@ -378,8 +363,8 @@ class Client:
             tokenGet = token
             amountGet = w3.toWei(amountBigNum, 'ether')
             amountGive = w3.toWei(amountBaseBigNum, 'ether')
-        else:
-            print('WARNING: invalid order side, no action taken: ' + str(side))
+        #else:
+            #print('WARNING: invalid order side, no action taken: ' + str(side))
         # Serialize (according to ABI) and sha256 hash the order's parameters
         hashhex = self.solidity_sha256(
             ['address', 'address', 'uint256', 'address', 'uint256', 'uint256', 'uint256'],
@@ -406,7 +391,6 @@ class Client:
     def post_order(self, order):
         """
         Posts an order to the off-chain order book
-
         :param order: signed order
         :type order: object
         :return: response
@@ -426,7 +410,6 @@ class Client:
     def trade(self, order, eth_amount, user_private_key):
         """
         Invokes on-chain trade
-
         :param order: order
         :type order: object
         :param eth_amount: ETH amount
@@ -448,8 +431,8 @@ class Client:
             ordertype = 'sell'   # it's a sell order so we are buying tokens for ETH
             amount = eth_amount
         amount_in_wei = web3.toWei(amount, 'ether')
-        print("\nTrading " + str(eth_amount) + " ETH of tokens (" + str(amount) + " tokens) against this " + ordertype + " order: %.10f tokens @ %.10f ETH/token" % (float(order['ethAvailableVolume']), float(order['price'])))
-        print("Details about order: " + str(order))
+        #print("\nTrading " + str(eth_amount) + " ETH of tokens (" + str(amount) + " tokens) against this " + ordertype + " order: %.10f tokens @ %.10f ETH/token" % (float(order['ethAvailableVolume']), float(order['price'])))
+        #print("Details about order: " + str(order))
         # trade function arguments
         kwargs = {
             'tokenGet' : Web3.toChecksumAddress(order['tokenGet']),
@@ -468,18 +451,18 @@ class Client:
         if len(user_private_key) != 64: raise ValueError('WARNING: user_private_key must be a hexadecimal string of 64 characters long')
         # Build binary representation of the function call with arguments
         abidata = self.contractEtherDelta.encodeABI('trade', kwargs=kwargs)
-        print("abidata: " + str(abidata))
+        #print("abidata: " + str(abidata))
         nonce = w3.eth.getTransactionCount(userAccount)
         # Override to have same as other transaction:
         #nonce = 53
-        print("nonce: " + str(nonce))
+        #print("nonce: " + str(nonce))
         transaction = { 'to': addressEtherDelta, 'from': userAccount, 'gas': maxGas, 'gasPrice': gasPriceWei, 'data': abidata, 'nonce': nonce, 'chainId': 1}
-        print(transaction)
+        #print(transaction)
         signed = w3.eth.account.signTransaction(transaction, user_private_key)
-        print("signed: " + str(signed))
+        #print("signed: " + str(signed))
         result = w3.eth.sendRawTransaction(w3.toHex(signed.rawTransaction))
-        print("Transaction returned: " + str(result))
-        print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(result))
+        #print("Transaction returned: " + str(result))
+        #print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(result))
         return result
 
 
@@ -540,11 +523,11 @@ class Client:
         # Build binary representation of the function call with arguments
         abidata = self.contractEtherDelta.encodeABI("depositToken", kwargs=kwargs)
         transaction = { 'to': addressEtherDelta, 'from': userAccount, 'gas': maxGas, 'gasPrice': gasPriceWei, 'data': abidata, 'nonce': nonce + 1, 'chainId': 1}
-        print(transaction)
+        #print(transaction)
         signed = w3.eth.account.signTransaction(transaction, user_private_key)
         depositresult = w3.eth.sendRawTransaction(w3.toHex(signed.rawTransaction))
-        print("Transaction returned: " + str(depositresult))
-        print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(depositresult))
+        #print("Transaction returned: " + str(depositresult))
+        #print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(depositresult))
 
         result = {
             "approve": approved,
@@ -571,11 +554,11 @@ class Client:
         abidata = token_contract.encodeABI("approve", kwargs=kwargs)
         nonce = w3.eth.getTransactionCount(userAccount)
         transaction = { 'to': Web3.toChecksumAddress(tokenaddress), 'from': userAccount, 'gas': maxGas, 'gasPrice': gasPriceWei, 'data': abidata, 'nonce': nonce, 'chainId': 1}
-        print(transaction)
+        #print(transaction)
         signed = w3.eth.account.signTransaction(transaction, user_private_key)
         result = w3.eth.sendRawTransaction(w3.toHex(signed.rawTransaction))
-        print("Transaction returned: " + str(result))
-        print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(result))
+        #print("Transaction returned: " + str(result))
+        #print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(result))
         return result, nonce
 
     def __send_transaction(self, func, kwargs, user_private_key):
@@ -590,11 +573,11 @@ class Client:
         abidata = self.contractEtherDelta.encodeABI(func, kwargs=kwargs)
         nonce = w3.eth.getTransactionCount(userAccount)
         transaction = { 'to': addressEtherDelta, 'from': userAccount, 'gas': maxGas, 'gasPrice': gasPriceWei, 'data': abidata, 'nonce': nonce, 'chainId': 1}
-        print(transaction)
+        #print(transaction)
         signed = w3.eth.account.signTransaction(transaction, user_private_key)
         result = w3.eth.sendRawTransaction(w3.toHex(signed.rawTransaction))
-        print("Transaction returned: " + str(result))
-        print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(result))
+        #print("Transaction returned: " + str(result))
+        #print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(result))
         return result
 
     def deposit(self, amount, user_private_key):
@@ -610,17 +593,16 @@ class Client:
         abidata = self.contractEtherDelta.encodeABI("deposit")
         nonce = w3.eth.getTransactionCount(userAccount)
         transaction = { 'to': addressEtherDelta, 'from': userAccount, 'gas': maxGas, 'gasPrice': gasPriceWei, 'value': amount_in_wei, 'data': abidata, 'nonce': nonce, 'chainId': 1}
-        print(transaction)
+        #print(transaction)
         signed = w3.eth.account.signTransaction(transaction, user_private_key)
         result = w3.eth.sendRawTransaction(w3.toHex(signed.rawTransaction))
-        print("Transaction returned: " + str(result))
-        print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(result))
+        #print("Transaction returned: " + str(result))
+        #print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(result))
         return result
 
     def cancel_order(self, order, user_private_key):
         """
         Cancels an order on-chain
-
         :param order: order
         :type order: object
         :param user_private_key: user private key
@@ -633,8 +615,8 @@ class Client:
         # Transaction info
         maxGas = 250000
         gasPriceWei = 1000000000    # 1 Gwei
-        print("\nCancelling")
-        print("Details about order: " + str(order))
+        #print("\nCancelling")
+        #print("Details about order: " + str(order))
         # trade function arguments
         kwargs = {
             'tokenGet' : Web3.toChecksumAddress(order['tokenGet']),
@@ -651,18 +633,18 @@ class Client:
         if len(user_private_key) != 64: raise ValueError('WARNING: user_private_key must be a hexadecimal string of 64 characters long')
         # Build binary representation of the function call with arguments
         abidata = self.contractEtherDelta.encodeABI('cancelOrder', kwargs=kwargs)
-        print("abidata: " + str(abidata))
+        #print("abidata: " + str(abidata))
         nonce = w3.eth.getTransactionCount(userAccount)
         # Override to have same as other transaction:
         #nonce = 53
-        print("nonce: " + str(nonce))
+        #print("nonce: " + str(nonce))
         transaction = { 'to': addressEtherDelta, 'from': userAccount, 'gas': maxGas, 'gasPrice': gasPriceWei, 'data': abidata, 'nonce': nonce, 'chainId': 1}
-        print(transaction)
+        #print(transaction)
         signed = w3.eth.account.signTransaction(transaction, user_private_key)
-        print("signed: " + str(signed))
+        #print("signed: " + str(signed))
         result = w3.eth.sendRawTransaction(w3.toHex(signed.rawTransaction))
-        print("Transaction returned: " + str(result))
-        print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(result))
+        #print("Transaction returned: " + str(result))
+        #print("\nDone! You should see the transaction show up at https://etherscan.io/tx/" + w3.toHex(result))
         return result
 
     # This function is very similar to Web3.soliditySha3() but there is no Web3.solidity_sha256() as per November 2017
@@ -721,7 +703,7 @@ class Client:
 
     def send_message(self, argObject):
         tosend = '42["message",' + json.JSONEncoder().encode(argObject) + ']'
-        print ('Sending message: ' + tosend)
+        #print ('Sending message: ' + tosend)
         self.ws.send(tosend)
 
     def on_ping(self, ws, ping):
